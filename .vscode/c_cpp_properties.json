@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "${default}",
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "/home/anshulraje/fans_ws/devel/include/**",
+                "/opt/ros/noetic/include/**",
+                "/home/anshulraje/fans_ws/src/mavros/libmavconn/include/**",
+                "/home/anshulraje/fans_ws/PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/include/**",
+                "/home/anshulraje/fans_ws/src/mavros/mavros/include/**",
+                "/home/anshulraje/fans_ws/src/mavros/mavros_msgs/include/**",
+                "/home/anshulraje/fans_ws/src/mavros/test_mavros/include/**",
+                "/usr/include/**",
+                "${workspaceFolder}/include"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
+}

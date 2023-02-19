@@ -22,7 +22,7 @@
 
 
 
-   <!-- UAV0 -->
+    <!-- UAV0 -->
     <group ns="uav0">
         <!-- MAVROS and vehicle configs -->
         <arg name="ID" value="0"/>
