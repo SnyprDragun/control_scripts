@@ -18,9 +18,6 @@ Takeoff::Takeoff(int id){
 
     string arming_client_topic = "/mavros/cmd/arming";
     this->arming_client = this->nh.serviceClient<mavros_msgs::CommandBool>(arming_client_topic);
-
-    string set_mode_client_topic = "/mavros/set_mode";
-    this->set_mode_client = this->nh.serviceClient<mavros_msgs::SetMode>(set_mode_client_topic);
 }
 
 void Takeoff::state_cb(const mavros_msgs::State& msg){
