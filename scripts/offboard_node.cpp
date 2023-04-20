@@ -1,6 +1,6 @@
 #include "control_scripts/offboard_node.hpp"
 
-#define HOVER_ALTITUDE 2.0f
+#define HOVER_ALTITUDE 1.0f
 
 mavros_msgs::State current_state;
 geometry_msgs::PoseStamped pose;
@@ -9,16 +9,16 @@ Offboard::Offboard(int id){
     string uav = "uav";
     string uav_id = to_string(id);
 
-    string state_sub_topic = uav + uav_id + "/mavros/state";
+    string state_sub_topic = "/mavros/state";
     this->state_sub = this->nh.subscribe(state_sub_topic, 10, &Offboard::state_cb, this);
 
-    string local_pos_pub_topic = uav + uav_id + "/mavros/setpoint_position/local";
+    string local_pos_pub_topic = "/mavros/setpoint_position/local";
     this->local_pos_pub = this->nh.advertise<geometry_msgs::PoseStamped>(local_pos_pub_topic, 10);
 
-    string arming_client_topic = uav + uav_id + "/mavros/cmd/arming";
+    string arming_client_topic = "/mavros/cmd/arming";
     this->arming_client = this->nh.serviceClient<mavros_msgs::CommandBool>(arming_client_topic);
 
-    string set_mode_client_topic = uav + uav_id + "/mavros/set_mode";
+    string set_mode_client_topic = "/mavros/set_mode";
     this->set_mode_client = this->nh.serviceClient<mavros_msgs::SetMode>(set_mode_client_topic);
 }
 
@@ -45,7 +45,7 @@ void Offboard::init_connection(){
         ros::spinOnce();
         rate.sleep();
         }
-    }
+}
 
 void Offboard::init_offboard_arm(){
     Rate rate(20);

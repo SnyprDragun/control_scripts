@@ -7,16 +7,16 @@ Position::Position(int id){
     string uav = "uav";
     string uav_id = to_string(id);
 
-    string gps_points_sub_topic = uav + uav_id + "/gps_points";
+    string gps_points_sub_topic = "/gps_points";
     this->gps_points_sub = this->nh.subscribe(gps_points_sub_topic, 10, &Position::gps_points_cb, this);
 
-    string local_pos_pub_topic = uav + uav_id + "/mavros/setpoint_position/local";
+    string local_pos_pub_topic = "/mavros/setpoint_position/local";
     this->local_pos_pub = this->nh.advertise<geometry_msgs::PoseStamped>(local_pos_pub_topic, 10);
 
     string end_mission_sub_topic = "/end_mission";
     this->end_mission_sub = this->nh.subscribe(end_mission_sub_topic,10, &Position::end_mission_cb, this);
 
-    string landing_client_topic = uav + uav_id + "/mavros/cmd/land";
+    string landing_client_topic = "/mavros/cmd/land";
     this->landing_client = this->nh.serviceClient<mavros_msgs::CommandTOL>(landing_client_topic);
 }
 
@@ -37,7 +37,7 @@ void Position::velocity_cmd(){
     Rate rate(20);
     gps_points_msg.pose.position.x = 0;
     gps_points_msg.pose.position.y = 0;
-    gps_points_msg.pose.position.z = 2;
+    gps_points_msg.pose.position.z = 1;
 
     while(!end_mission_state.data){
         local_pos_pub.publish(gps_points_msg);

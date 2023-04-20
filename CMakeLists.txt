@@ -125,6 +125,7 @@ include_directories(
 add_library(${PROJECT_NAME}
   scripts/position_control.cpp
   scripts/offboard_node.cpp
+  scripts/takeoff_node.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
