@@ -1,5 +1,5 @@
-#ifndef TAKEOFF_NODE_HPP
-#define TAKEOFF_NODE_HPP
+#ifndef LANDING_NODE_HPP
+#define LANDING_NODE_HPP
 
 #include <ros/ros.h>
 #include <string.h>
@@ -13,20 +13,19 @@
 using namespace std;
 using namespace ros;
 
-class Takeoff{
+class Land{
     private:
         NodeHandle nh;
         Subscriber state_sub;
-        ServiceClient takeoff_client;
-        ServiceClient arming_client;
+        Publisher local_pos_pub;
+        ServiceClient landing_client;
         ServiceClient set_mode_client;
         
     public:
-        Takeoff(int);
+        Land(int);
         void state_cb(const mavros_msgs::State&);
         void init_connection();
-        void arm();
-        void takeoff(float);
+        void land();
 };
 
 #endif

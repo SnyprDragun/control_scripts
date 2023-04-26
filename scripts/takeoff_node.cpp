@@ -10,9 +10,6 @@ Takeoff::Takeoff(int id){
     string state_sub_topic = "/mavros/state";
     this->state_sub = this->nh.subscribe(state_sub_topic, 10, &Takeoff::state_cb, this);
 
-    string local_pos_pub_topic = "/mavros/setpoint_position/local";
-    this->local_pos_pub = this->nh.advertise<geometry_msgs::PoseStamped>(local_pos_pub_topic, 10);
-
     string takeoff_client_topic = "/mavros/cmd/takeoff";
     this->takeoff_client = this->nh.serviceClient<mavros_msgs::CommandTOL>(takeoff_client_topic);
 
@@ -33,16 +30,6 @@ void Takeoff::init_connection(){
         rate.sleep();
     }
     ROS_INFO("Connected!");
-
-    pose_takeoff.pose.position.x = 0;
-    pose_takeoff.pose.position.y = 0;
-    pose_takeoff.pose.position.z = 0;
-
-    for(int i = 100; ok() && i > 0; --i){
-        local_pos_pub.publish(pose_takeoff);
-        spinOnce();
-        rate.sleep();
-        }
 }
 
 void Takeoff::arm(){

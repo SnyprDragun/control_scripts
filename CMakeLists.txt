@@ -126,6 +126,7 @@ add_library(${PROJECT_NAME}
   scripts/position_control.cpp
   scripts/offboard_node.cpp
   scripts/takeoff_node.cpp
+  scripts/landing_node.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
@@ -141,6 +142,8 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 # target_link_libraries(position_control ${catkin_LIBRARIES})
 # add_executable(offboard_node scripts/offboard_node.cpp)
 # target_link_libraries(offboard_node ${catkin_LIBRARIES})
+add_executable(landing_node scripts/landing_node.cpp)
+target_link_libraries(landing_node ${catkin_LIBRARIES})
 add_executable(root_controller scripts/root_controller.cpp)
 target_link_libraries(root_controller ${catkin_LIBRARIES} ${PROJECT_NAME})
 
