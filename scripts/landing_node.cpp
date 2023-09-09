@@ -52,13 +52,3 @@ void Land::land(){
         rate.sleep();
     }
 }
-
-//temp
-int main(int argc, char **argv){
-    init(argc, argv, "landing_node", init_options::AnonymousName);
-    int uav_id = 0;
-
-    Land land(uav_id);
-    land.init_connection();
-    land.land();
-}
