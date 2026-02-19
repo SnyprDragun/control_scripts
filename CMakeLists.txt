@@ -7,9 +7,47 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(builtin_interfaces REQUIRED)
+find_package(eigen3_cmake_module REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(px4_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(rclpy REQUIRED)
+
+#################
+# Setup targets #
+#################
+
+include_directories(include)
+
+# examples/offboard/offboard_control
+add_executable(offboard_control src/offboard_control.cpp)
+ament_target_dependencies(offboard_control rclcpp px4_msgs)
+install(TARGETS offboard_control DESTINATION lib/${PROJECT_NAME})
+
+# examples/offboard/offboard_control_srv
+add_executable(offboard_control_srv src/offboard_control_srv.cpp)
+ament_target_dependencies(offboard_control_srv rclcpp px4_msgs)
+install(TARGETS offboard_control_srv DESTINATION lib/${PROJECT_NAME})
+
+############
+# Install ##
+############
+
+# Export information to downstream packages
+ament_export_dependencies(ament_cmake rclcpp rosidl_default_runtime eigen3_cmake_module Eigen3 px4_msgs geometry_msgs sensor_msgs)
+
+ament_export_include_directories(include)
+# ament_export_libraries(frame_transforms)
+
+# Install header files
+install(DIRECTORY include/${PROJECT_NAME}/ DESTINATION include/${PROJECT_NAME})
+
+# Install launch files.
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
