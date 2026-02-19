@@ -7,27 +7,23 @@
 
 #include "control_scripts/offboard_node.hpp"
 
-Offboard::Offboard() : Node("offboard_control"),
-  offboard_setpoint_counter_(0)
+Offboard::Offboard() : Node("offboard_control")
 {
     offboard_control_mode_publisher_ = this->create_publisher<OffboardControlMode>("/fmu/in/offboard_control_mode", 10);
     trajectory_setpoint_publisher_ = this->create_publisher<TrajectorySetpoint>("/fmu/in/trajectory_setpoint", 10);
     vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("/fmu/in/vehicle_command", 10);
 
-    timer_ = this->create_wall_timer(
+    /** Keepalive timer — streams the current target at 10 Hz to maintain offboard mode.
+     * PX4 will fall back out of offboard mode if setpoints stop for ~0.5 seconds,
+     * so this timer continuously re-publishes whatever go_to() last set as the target.
+     */
+	keepalive_timer_ = this->create_wall_timer(
         100ms,
         [this]() -> void {
-
-            if (offboard_setpoint_counter_ == 10) {
-                publish_vehicle_command(VehicleCommand::VEHICLE_CMD_DO_SET_MODE, 1, 6);
-                arm();
-            }
-
             publish_offboard_control_mode();
-            publish_trajectory_setpoint();
-
-            if (offboard_setpoint_counter_ < 11) {
-                offboard_setpoint_counter_++;
+            if (offboard_active_) {
+                lock_guard<mutex> lock(target_mutex_);
+                setpoint(target_x_, target_y_, target_z_, target_yaw_);
             }
         });
 }
@@ -53,6 +49,50 @@ void Offboard::disarm()
 }
 
 /**
+ * @brief Prime the setpoint stream, switch to offboard mode, and arm the vehicle.
+ *        PX4 requires setpoints to already be streaming before it will accept the
+ *        mode switch command, so this function publishes ~10 setpoints at the
+ *        current target position before sending the mode change and arm commands.
+ *        Blocks for approximately 1 second.
+ */
+void Offboard::change_mode_offboard()
+{
+    RCLCPP_INFO(this->get_logger(), "Priming setpoint stream before offboard switch...");
+    Rate rate(10);
+    for (int i = 0; i < 10; i++) {
+        publish_offboard_control_mode();
+        {
+            lock_guard<mutex> lock(target_mutex_);
+            setpoint(target_x_, target_y_, target_z_, target_yaw_);
+        }
+        rate.sleep();
+    }
+    publish_vehicle_command(VehicleCommand::VEHICLE_CMD_DO_SET_MODE, 1, 6);
+    arm();
+    offboard_active_ = true;
+    RCLCPP_INFO(this->get_logger(), "Offboard mode activated");
+}
+
+/**
+ * @brief Update the target position that the keepalive timer streams to the FMU.
+ *        Thread-safe — can be called from the main thread while the timer callback
+ *        runs on the executor thread.
+ * @param x     Target x position (NED, meters)
+ * @param y     Target y position (NED, meters)
+ * @param z     Target z position (NED, meters — negative = up)
+ * @param yaw   Target yaw angle in radians [-PI:PI]
+ */
+void Offboard::go_to(float x, float y, float z, float yaw)
+{
+    lock_guard<mutex> lock(target_mutex_);
+    target_x_ = x;
+    target_y_ = y;
+    target_z_ = z;
+    target_yaw_ = yaw;
+    RCLCPP_INFO(this->get_logger(), "go_to: [%.2f, %.2f, %.2f] yaw=%.2f", x, y, z, yaw);
+}
+
+/**
  * @brief Publish the offboard control mode.
  *        For this example, only position and altitude controls are active.
  */
@@ -73,11 +113,11 @@ void Offboard::publish_offboard_control_mode()
  *        For this example, it sends a trajectory setpoint to make the
  *        vehicle hover at 5 meters with a yaw angle of 180 degrees.
  */
-void Offboard::publish_trajectory_setpoint()
+void Offboard::setpoint(float x, float y, float z, float yaw)
 {
 	TrajectorySetpoint msg{};
-	msg.position = {0.0, 0.0, -5.0};
-	msg.yaw = -3.14; // [-PI:PI]
+	msg.position = {x, y, z};
+	msg.yaw = yaw; // [-PI:PI]
 	msg.timestamp = this->get_clock()->now().nanoseconds() / 1000;
 	trajectory_setpoint_publisher_->publish(msg);
 }
@@ -101,15 +141,4 @@ void Offboard::publish_vehicle_command(uint16_t command, float param1, float par
 	msg.from_external = true;
 	msg.timestamp = this->get_clock()->now().nanoseconds() / 1000;
 	vehicle_command_publisher_->publish(msg);
-}
-
-int main(int argc, char *argv[])
-{
-	cout << "Starting offboard control node..." << endl;
-	setvbuf(stdout, NULL, _IONBF, BUFSIZ);
-	init(argc, argv);
-	spin(make_shared<Offboard>());
-
-	shutdown();
-	return 0;
 }
