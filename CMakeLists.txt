@@ -22,10 +22,10 @@ find_package(rclpy REQUIRED)
 
 include_directories(include)
 
-# examples/offboard/offboard_control
-add_executable(offboard_control src/offboard_control.cpp)
-ament_target_dependencies(offboard_control rclcpp px4_msgs)
-install(TARGETS offboard_control DESTINATION lib/${PROJECT_NAME})
+# examples/offboard/offboard_node
+add_executable(offboard_node src/offboard_node.cpp)
+ament_target_dependencies(offboard_node rclcpp px4_msgs)
+install(TARGETS offboard_node DESTINATION lib/${PROJECT_NAME})
 
 # examples/offboard/offboard_control_srv
 add_executable(offboard_control_srv src/offboard_control_srv.cpp)
