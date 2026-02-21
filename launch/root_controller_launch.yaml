@@ -1,0 +1,7 @@
+launch:
+
+- node:
+    pkg: "control_scripts"
+    exec: "root_controller"
+    name: "root_controller"
+    output: "screen"

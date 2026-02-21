@@ -16,11 +16,30 @@ int main(int argc, char *argv[])
 	setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 	init(argc, argv);
 
+    auto takeoff_node = make_shared<Takeoff>();
     auto offboard_node = make_shared<Offboard>();
+    // auto landing_node = make_shared<Landing>();
 
+    executors::MultiThreadedExecutor executor;
+    executor.add_node(takeoff_node);
+    executor.add_node(offboard_node);
+    // executor.add_node(landing_node);
+
+    // Spin both nodes in a background thread so sequential logic runs freely in main
     thread spin_thread([&]() {
-        spin(offboard_node);
+        executor.spin();
     });
+
+    // Arm and take off to 5 metres. Blocks until altitude is reached (or timeout).
+    // takeoff_node->arm();
+    takeoff_node->takeoff(2.5f);
+
+    if (!takeoff_node->takeoff_complete()) {
+        RCLCPP_ERROR(takeoff_node->get_logger(), "Takeoff failed or timed out — aborting mission.");
+        rclcpp::shutdown();
+        spin_thread.join();
+        return 1;
+    }
 
     offboard_node->change_mode_offboard();
 
