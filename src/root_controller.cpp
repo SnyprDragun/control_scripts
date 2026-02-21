@@ -18,12 +18,12 @@ int main(int argc, char *argv[])
 
     auto takeoff_node = make_shared<Takeoff>();
     auto offboard_node = make_shared<Offboard>();
-    // auto landing_node = make_shared<Landing>();
+    auto landing_node = make_shared<Land>();
 
     executors::MultiThreadedExecutor executor;
     executor.add_node(takeoff_node);
     executor.add_node(offboard_node);
-    // executor.add_node(landing_node);
+    executor.add_node(landing_node);
 
     // Spin both nodes in a background thread so sequential logic runs freely in main
     thread spin_thread([&]() {
@@ -41,15 +41,21 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    offboard_node->change_mode_offboard();
+    // offboard_node->change_mode_offboard();
 
-    for (int i = 0; i < 20; i++) {
-        offboard_node->go_to(i * 0.5f, 0.0f, -5.0f);
-        this_thread::sleep_for(milliseconds(500));
+    // for (int i = 0; i < 20; i++) {
+    //     offboard_node->go_to(i * 0.5f, 0.0f, -5.0f);
+    //     this_thread::sleep_for(milliseconds(500));
+    // }
+
+    // offboard_node->go_to(10.0f, 0.0f, -5.0f);
+    // this_thread::sleep_for(seconds(5));
+
+    landing_node->land();
+
+    if (!landing_node->land_complete()) {
+        RCLCPP_WARN(landing_node->get_logger(), "Landing timed out — check vehicle state.");
     }
-
-    offboard_node->go_to(10.0f, 0.0f, -5.0f);
-    this_thread::sleep_for(seconds(5));
 
     shutdown();
     spin_thread.join();

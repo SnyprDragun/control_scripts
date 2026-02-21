@@ -35,7 +35,7 @@ add_executable(root_controller
   src/root_controller.cpp
   src/takeoff_node.cpp
   src/offboard_node.cpp
-  # src/landing_node.cpp
+  src/landing_node.cpp
 )
 ament_target_dependencies(root_controller rclcpp px4_msgs)
 install(TARGETS root_controller DESTINATION lib/${PROJECT_NAME})
