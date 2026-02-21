@@ -8,9 +8,9 @@
 #ifndef OFFBOARD_NODE_HPP_
 #define OFFBOARD_NODE_HPP_
 
+#include <mutex>
 #include <chrono>
 #include <iostream>
-#include <mutex>
 #include <stdint.h>
 #include <rclcpp/rclcpp.hpp>
 #include <px4_msgs/msg/vehicle_command.hpp>

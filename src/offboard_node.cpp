@@ -68,7 +68,7 @@ void Offboard::change_mode_offboard()
         rate.sleep();
     }
     publish_vehicle_command(VehicleCommand::VEHICLE_CMD_DO_SET_MODE, 1, 6);
-    arm();
+    // arm();
     offboard_active_ = true;
     RCLCPP_INFO(this->get_logger(), "Offboard mode activated");
 }
