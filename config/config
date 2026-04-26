@@ -1,0 +1,131 @@
+[global_config]
+  focus = system
+[keybindings]
+[profiles]
+  [[default]]
+    cursor_color = "#aaaaaa"
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+  [[multi_uav_sim]]
+    
+    [[[window0]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 0:0
+      size = 1920, 1080
+    
+    
+    ###########################################################
+    # First split: Left half and Right half
+    ###########################################################
+    
+    [[[child1]]]
+      type = HPaned
+      parent = window0
+      order = 0
+      position = 960
+    
+    
+    ###########################################################
+    # LEFT SIDE → split into 3 vertical panes
+    ###########################################################
+    
+    # First split left side into top + lower section
+    [[[child2]]]
+      type = VPaned
+      parent = child1
+      order = 0
+      position = 360
+    
+    # Split lower-left section again into middle + bottom
+    [[[child3]]]
+      type = VPaned
+      parent = child2
+      order = 1
+      position = 360
+    
+    
+    ###########################################################
+    # RIGHT SIDE → split into 3 vertical panes
+    ###########################################################
+    
+    # First split right side into top + lower section
+    [[[child4]]]
+      type = VPaned
+      parent = child1
+      order = 1
+      position = 360
+    
+    # Split lower-right section again into middle + bottom
+    [[[child5]]]
+      type = VPaned
+      parent = child4
+      order = 1
+      position = 360
+    
+    
+    ###########################################################
+    # LEFT SIDE TERMINALS
+    ###########################################################
+    
+    # Top-left
+    [[[terminal1]]]
+      type = Terminal
+      parent = child2
+      order = 0
+      profile = default
+      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/launch_px4.sh"'
+    
+    # Middle-left
+    [[[terminal2]]]
+      type = Terminal
+      parent = child3
+      order = 0
+      profile = default
+      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/add_uav1.sh"'
+    
+    # Bottom-left
+    [[[terminal3]]]
+      type = Terminal
+      parent = child3
+      order = 1
+      profile = default
+      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/add_uav2.sh"'
+    
+    
+    ###########################################################
+    # RIGHT SIDE TERMINALS
+    ###########################################################
+    
+    # Top-right
+    [[[terminal4]]]
+      type = Terminal
+      parent = child4
+      order = 0
+      profile = default
+      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/start_xrce_dds.sh"'
+    
+    # Middle-right
+    [[[terminal5]]]
+      type = Terminal
+      parent = child5
+      order = 0
+      profile = default
+      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/start_qgc.sh"'
+    
+    # Bottom-right
+    [[[terminal6]]]
+      type = Terminal
+      parent = child5
+      order = 1
+      profile = default
+      command = 'bash -c "echo Pane 6; exec bash"'
+[plugins]
