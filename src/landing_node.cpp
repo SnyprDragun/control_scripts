@@ -126,9 +126,7 @@ void Land::vehicle_status_callback(const VehicleStatus::SharedPtr msg)
  * @param param6    Command parameter 6
  * @param param7    Command parameter 7
  */
-void Land::publish_vehicle_command(uint16_t command,
-    float param1, float param2, float param3, float param4,
-    float param5, float param6, float param7)
+void Land::publish_vehicle_command(uint16_t command, float param1, float param2, float param3, float param4, float param5, float param6, float param7)
 {
     VehicleCommand msg{};
     msg.param1 = param1;

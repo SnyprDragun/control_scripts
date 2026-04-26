@@ -36,20 +36,20 @@ int main(int argc, char *argv[])
 
     if (!takeoff_node->takeoff_complete()) {
         RCLCPP_ERROR(takeoff_node->get_logger(), "Takeoff failed or timed out — aborting mission.");
-        rclcpp::shutdown();
+        shutdown();
         spin_thread.join();
         return 1;
     }
 
-    // offboard_node->change_mode_offboard();
+    offboard_node->change_mode_offboard();
 
-    // for (int i = 0; i < 20; i++) {
-    //     offboard_node->go_to(i * 0.5f, 0.0f, -5.0f);
-    //     this_thread::sleep_for(milliseconds(500));
-    // }
+    for (int i = 0; i < 20; i++) {
+        offboard_node->go_to(i * 0.5f, 0.0f, -5.0f);
+        this_thread::sleep_for(milliseconds(500));
+    }
 
-    // offboard_node->go_to(10.0f, 0.0f, -5.0f);
-    // this_thread::sleep_for(seconds(5));
+    offboard_node->go_to(10.0f, 0.0f, -5.0f);
+    this_thread::sleep_for(seconds(5));
 
     landing_node->land();
 

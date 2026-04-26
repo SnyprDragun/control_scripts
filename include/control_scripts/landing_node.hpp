@@ -71,9 +71,10 @@ private:
     // Reliable QoS causes a silent mismatch and no messages are ever received.
     Subscription<VehicleStatus>::SharedPtr vehicle_status_subscriber_;
 
-    // arming_state values from VehicleStatus:
-    //   1 = ARMING_STATE_STANDBY (disarmed, ready)
-    //   2 = ARMING_STATE_ARMED
+    /** arming_state values from VehicleStatus:
+     *   1 = ARMING_STATE_STANDBY (disarmed, ready)
+     *   2 = ARMING_STATE_ARMED
+     */
     atomic<uint8_t> arming_state_{0};
     atomic<bool> status_received_{false};
     atomic<bool> land_complete_{false};
