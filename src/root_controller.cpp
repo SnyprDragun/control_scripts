@@ -12,13 +12,15 @@
 
 int main(int argc, char *argv[])
 {
+    int uav_id = 1; 
+
 	cout << "Starting root controller node..." << endl;
 	setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 	init(argc, argv);
 
-    auto takeoff_node = make_shared<Takeoff>();
-    auto offboard_node = make_shared<Offboard>();
-    auto landing_node = make_shared<Land>();
+    auto takeoff_node = make_shared<Takeoff>(uav_id);
+    auto offboard_node = make_shared<Offboard>(uav_id);
+    auto landing_node = make_shared<Land>(uav_id);
 
     executors::MultiThreadedExecutor executor;
     executor.add_node(takeoff_node);

@@ -27,7 +27,7 @@ using namespace chrono_literals;
 class Offboard : public Node
 {
 public:
-    Offboard();
+    Offboard(int uav_id);
     void arm();
     void disarm();
 
@@ -53,6 +53,8 @@ public:
     void publish_vehicle_command(uint16_t command, float param1 = 0.0, float param2 = 0.0);
 
 private:
+    int id;
+
     TimerBase::SharedPtr keepalive_timer_;
 
     Publisher<OffboardControlMode>::SharedPtr offboard_control_mode_publisher_;

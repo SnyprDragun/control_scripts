@@ -7,10 +7,10 @@
 
 #include "control_scripts/landing_node.hpp"
 
-Land::Land() : Node("landing_control")
+Land::Land(int uav_id) : Node("landing_control")
 {
-    vehicle_command_publisher_ = this->create_publisher<VehicleCommand>(
-        "/fmu/in/vehicle_command", 10);
+    string id = to_string(uav_id);
+    vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("px4_" + id+ "/fmu/in/vehicle_command", 10);
 
     // Subscribe to vehicle_status to monitor arming_state during landing.
     // PX4 publishes with Best Effort reliability — must match or the QoS handshake
@@ -18,8 +18,7 @@ Land::Land() : Node("landing_control")
     rclcpp::QoS qos_best_effort(10);
     qos_best_effort.best_effort();
 
-    vehicle_status_subscriber_ = this->create_subscription<VehicleStatus>(
-        "/fmu/out/vehicle_status_v1",
+    vehicle_status_subscriber_ = this->create_subscription<VehicleStatus>("px4_" + id+ "/fmu/out/vehicle_status_v1",
         qos_best_effort,
         [this](const VehicleStatus::SharedPtr msg) {
             vehicle_status_callback(msg);
@@ -137,10 +136,10 @@ void Land::publish_vehicle_command(uint16_t command, float param1, float param2,
     msg.param6 = param6;
     msg.param7 = param7;
     msg.command = command;
-    msg.target_system = 1;
-    msg.target_component = 1;
-    msg.source_system = 1;
-    msg.source_component = 1;
+    msg.target_system = this->id;
+    msg.target_component = this->id;
+    msg.source_system = this->id;
+    msg.source_component = this->id;
     msg.from_external = true;
     msg.timestamp = this->get_clock()->now().nanoseconds() / 1000;
     vehicle_command_publisher_->publish(msg);

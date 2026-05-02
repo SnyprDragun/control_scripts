@@ -7,9 +7,10 @@
 
 #include "control_scripts/takeoff_node.hpp"
 
-Takeoff::Takeoff() : Node("takeoff_control")
+Takeoff::Takeoff(int uav_id) : Node("takeoff_control")
 {
-    vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("/fmu/in/vehicle_command", 10);
+    string id = to_string(uav_id);
+    vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("px4_" + id+ "/fmu/in/vehicle_command", 10);
 
     /** Subscribe to vehicle_local_position to monitor altitude during takeoff.
      * PX4 publishes with Best Effort reliability — must match or the QoS handshake
@@ -18,7 +19,7 @@ Takeoff::Takeoff() : Node("takeoff_control")
     QoS qos_best_effort(10);
     qos_best_effort.best_effort();
 
-    vehicle_local_position_subscriber_ = this->create_subscription<VehicleLocalPosition>("/fmu/out/vehicle_local_position_v1",
+    vehicle_local_position_subscriber_ = this->create_subscription<VehicleLocalPosition>("px4_" + id+ "/fmu/out/vehicle_local_position_v1",
         qos_best_effort,
         [this](const VehicleLocalPosition::SharedPtr msg) {
             vehicle_local_position_callback(msg);
@@ -156,10 +157,10 @@ void Takeoff::publish_vehicle_command(uint16_t command, float param1, float para
     msg.param6 = param6;
     msg.param7 = param7;
     msg.command = command;
-    msg.target_system = 1;
-    msg.target_component = 1;
-    msg.source_system = 1;
-    msg.source_component = 1;
+    msg.target_system = this->id;
+    msg.target_component = this->id;
+    msg.source_system = this->id;
+    msg.source_component = this->id;
     msg.from_external = true;
     msg.timestamp = this->get_clock()->now().nanoseconds() / 1000;
     vehicle_command_publisher_->publish(msg);

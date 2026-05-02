@@ -25,7 +25,7 @@ using namespace chrono_literals;
 class Takeoff : public Node
 {
 public:
-    Takeoff();
+    Takeoff(int uav_id);
 
     /**
      * @brief Send a command to Arm the vehicle
@@ -77,6 +77,8 @@ public:
     );
 
 private:
+    int id;
+
     Publisher<VehicleCommand>::SharedPtr vehicle_command_publisher_;
     // Subscriber uses Best Effort QoS to match PX4's publisher — using the default
     // Reliable QoS causes a silent mismatch and no messages are ever received.

@@ -7,11 +7,12 @@
 
 #include "control_scripts/offboard_node.hpp"
 
-Offboard::Offboard() : Node("offboard_control")
+Offboard::Offboard(int uav_id) : Node("offboard_control")
 {
-    offboard_control_mode_publisher_ = this->create_publisher<OffboardControlMode>("/fmu/in/offboard_control_mode", 10);
-    trajectory_setpoint_publisher_ = this->create_publisher<TrajectorySetpoint>("/fmu/in/trajectory_setpoint", 10);
-    vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("/fmu/in/vehicle_command", 10);
+    string id = to_string(uav_id);
+    offboard_control_mode_publisher_ = this->create_publisher<OffboardControlMode>("px4_" + id+ "/fmu/in/offboard_control_mode", 10);
+    trajectory_setpoint_publisher_ = this->create_publisher<TrajectorySetpoint>("px4_" + id+ "/fmu/in/trajectory_setpoint", 10);
+    vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("px4_" + id+ "/fmu/in/vehicle_command", 10);
 
     /** Keepalive timer — streams the current target at 10 Hz to maintain offboard mode.
      * PX4 will fall back out of offboard mode if setpoints stop for ~0.5 seconds,
@@ -134,10 +135,10 @@ void Offboard::publish_vehicle_command(uint16_t command, float param1, float par
 	msg.param1 = param1;
 	msg.param2 = param2;
 	msg.command = command;
-	msg.target_system = 1;
-	msg.target_component = 1;
-	msg.source_system = 1;
-	msg.source_component = 1;
+	msg.target_system = this->id;
+	msg.target_component = this->id;
+	msg.source_system = this->id;
+	msg.source_component = this->id;
 	msg.from_external = true;
 	msg.timestamp = this->get_clock()->now().nanoseconds() / 1000;
 	vehicle_command_publisher_->publish(msg);

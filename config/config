@@ -82,7 +82,7 @@
       parent = child2
       order = 0
       profile = default
-      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/launch_px4.sh"'
+      command = 'bash -c "~/ros2_ws/src/control_scripts/config/launchers/launch_px4.sh"'
     
     # Middle-left
     [[[terminal2]]]
@@ -90,7 +90,7 @@
       parent = child3
       order = 0
       profile = default
-      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/add_uav1.sh"'
+      command = 'bash -c "~/ros2_ws/src/control_scripts/config/launchers/add_uav1.sh"'
     
     # Bottom-left
     [[[terminal3]]]
@@ -98,7 +98,7 @@
       parent = child3
       order = 1
       profile = default
-      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/add_uav2.sh"'
+      command = 'bash -c "~/ros2_ws/src/control_scripts/config/launchers/add_uav2.sh"'
     
     
     ###########################################################
@@ -111,7 +111,7 @@
       parent = child4
       order = 0
       profile = default
-      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/start_xrce_dds.sh"'
+      command = 'bash -c "~/ros2_ws/src/control_scripts/config/launchers/start_xrce_dds.sh"'
     
     # Middle-right
     [[[terminal5]]]
@@ -119,7 +119,7 @@
       parent = child5
       order = 0
       profile = default
-      command = 'bash -c "~/ros2_ws/src/control_scripts/launchers/start_qgc.sh"'
+      command = 'bash -c "~/ros2_ws/src/control_scripts/config/launchers/start_qgc.sh"'
     
     # Bottom-right
     [[[terminal6]]]
@@ -127,5 +127,5 @@
       parent = child5
       order = 1
       profile = default
-      command = 'bash -c "echo Pane 6; exec bash"'
+      command = 'bash -c "cd ~/ros2_ws/ && source install/setup.bash; exec bash"'
 [plugins]

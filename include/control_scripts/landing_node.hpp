@@ -25,7 +25,9 @@ using namespace chrono_literals;
 class Land : public Node
 {
 public:
-    Land();
+    int id;
+
+    Land(int uav_id);
 
     /**
      * @brief Switch to AUTO.LAND mode, block until vehicle_status reports
