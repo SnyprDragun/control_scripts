@@ -7,7 +7,7 @@
 
 #include "control_scripts/offboard_node.hpp"
 
-Offboard::Offboard(int uav_id) : Node("offboard_control")
+Offboard::Offboard(int uav_id) : Node("offboard_control" + to_string(uav_id))
 {
     string id = to_string(uav_id);
     offboard_control_mode_publisher_ = this->create_publisher<OffboardControlMode>("px4_" + id+ "/fmu/in/offboard_control_mode", 10);

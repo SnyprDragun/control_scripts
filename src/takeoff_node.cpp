@@ -7,7 +7,7 @@
 
 #include "control_scripts/takeoff_node.hpp"
 
-Takeoff::Takeoff(int uav_id) : Node("takeoff_control")
+Takeoff::Takeoff(int uav_id) : Node("takeoff_control_" + to_string(uav_id))
 {
     string id = to_string(uav_id);
     vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("px4_" + id+ "/fmu/in/vehicle_command", 10);

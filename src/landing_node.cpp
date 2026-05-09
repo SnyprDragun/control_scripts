@@ -7,7 +7,7 @@
 
 #include "control_scripts/landing_node.hpp"
 
-Land::Land(int uav_id) : Node("landing_control")
+Land::Land(int uav_id) : Node("landing_control" + to_string(uav_id))
 {
     string id = to_string(uav_id);
     vehicle_command_publisher_ = this->create_publisher<VehicleCommand>("px4_" + id+ "/fmu/in/vehicle_command", 10);

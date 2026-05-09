@@ -127,5 +127,5 @@
       parent = child5
       order = 1
       profile = default
-      command = 'bash -c "cd ~/ros2_ws/ && source install/setup.bash; exec bash"'
+      command = 'bash -c "~/ros2_ws/src/control_scripts/config/launchers/start_sitl.sh"'
 [plugins]
